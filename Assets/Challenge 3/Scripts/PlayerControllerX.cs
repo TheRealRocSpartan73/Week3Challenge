@@ -21,6 +21,8 @@ public class PlayerControllerX : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameOver = false;
+        playerRb = this.GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
 
@@ -35,7 +37,8 @@ public class PlayerControllerX : MonoBehaviour
         // While space is pressed and player is low enough, float up
         if (Input.GetKey(KeyCode.Space) && !gameOver)
         {
-            playerRb.AddForce(Vector3.up * floatForce);
+            Debug.Log("SpaceBarPressed");
+            playerRb.AddForce(Vector3.up * floatForce, ForceMode.Force);
         }
     }
 
