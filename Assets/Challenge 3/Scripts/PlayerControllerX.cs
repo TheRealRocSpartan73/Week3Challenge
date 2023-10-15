@@ -13,7 +13,6 @@ public class PlayerControllerX : MonoBehaviour
     private float gravityModifier = 1.5f;
     private Rigidbody playerRb;
     private float upperYBoundary = 13.74f;
-    private float upSpeed = 6.0f;
 
     public ParticleSystem explosionParticle;
     public ParticleSystem fireworksParticle;
@@ -22,7 +21,6 @@ public class PlayerControllerX : MonoBehaviour
     public AudioClip moneySound;
     public AudioClip explodeSound;
     public AudioClip bounceSound;
-    private float timeDiff = 0f;
 
 
     // Start is called before the first frame update
