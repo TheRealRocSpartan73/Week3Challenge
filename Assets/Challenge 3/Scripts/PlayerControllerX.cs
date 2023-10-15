@@ -5,12 +5,15 @@ using UnityEngine;
 public class PlayerControllerX : MonoBehaviour
 {
     public bool gameOver;
-    private bool noMoreKeyPresses = false;
+    private bool permitKeyPress = true;
+    private float pressDelay = 0.2f; //If at upper boundary don't allow input for a time
+    private float nextPress = -1f;
 
     public float floatForce;
     private float gravityModifier = 1.5f;
     private Rigidbody playerRb;
     private float upperYBoundary = 13.74f;
+    private float upSpeed = 6.0f;
 
     public ParticleSystem explosionParticle;
     public ParticleSystem fireworksParticle;
@@ -19,6 +22,7 @@ public class PlayerControllerX : MonoBehaviour
     public AudioClip moneySound;
     public AudioClip explodeSound;
     public AudioClip bounceSound;
+    private float timeDiff = 0f;
 
 
     // Start is called before the first frame update
@@ -37,23 +41,28 @@ public class PlayerControllerX : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        // While space is pressed and player is low enough, float up
-        if (Input.GetKey(KeyCode.Space) && !gameOver && !noMoreKeyPresses)
-        {
-            Debug.Log("SpaceBarPressed");
-            playerRb.AddForce(Vector3.up * floatForce, ForceMode.Force);
-
-        }
+ 
         //check Y position of player. If at upper boundary stop accepting input
         if (transform.position.y >= upperYBoundary)
         {
-            noMoreKeyPresses = true;
+            Debug.Log("No input allowed");
+            permitKeyPress = false;
+            nextPress = Time.time + pressDelay;
             transform.position = new Vector3(transform.position.x, upperYBoundary, transform.position.z);
         }
-        else
+        
+        if(permitKeyPress == false && Time.time > nextPress)
         {
-            noMoreKeyPresses = false;
+            permitKeyPress = true;
+        }
+
+        // While space is pressed and player is low enough, float up
+        if (Input.GetKey(KeyCode.Space) && !gameOver && permitKeyPress == true)
+        {
+
+            Debug.Log(" Space Down and moving " + Vector3.up * floatForce);
+            playerRb.AddForce(Vector3.up * floatForce);
+
         }
     }
 
@@ -78,12 +87,12 @@ public class PlayerControllerX : MonoBehaviour
             Destroy(other.gameObject);
 
         }
-        // if player collides with money, fireworks
-        else if (other.gameObject.CompareTag("Ground"))
+        // if player collides with ground, bounce if game is stil active
+        else if (other.gameObject.CompareTag("Ground") && !gameOver)
         {
-            Debug.Log("Bounce");
+            Debug.Log("Bounce");               
             playerAudio.PlayOneShot(bounceSound, 1.0f);
-            playerRb.AddForce(Vector3.up * floatForce, ForceMode.Impulse);
+            playerRb.AddForce(Vector3.up * 10, ForceMode.Impulse);
 
         }
 
