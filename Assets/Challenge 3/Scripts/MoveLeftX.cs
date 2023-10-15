@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveLeftX : MonoBehaviour
 {
-    public float speed;
+    private float speed = 15f;
     private PlayerControllerX playerControllerScript;
     private float leftBound = -10;
 
@@ -18,9 +18,9 @@ public class MoveLeftX : MonoBehaviour
     void Update()
     {
         // If game is not over, move to the left
-        if (playerControllerScript.gameOver)
+        if (playerControllerScript.gameOver == false)
         {
-            transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
+            transform.Translate(Vector3.left * speed * Time.deltaTime);
         }
 
         // If object goes off screen that is NOT the background, destroy it
