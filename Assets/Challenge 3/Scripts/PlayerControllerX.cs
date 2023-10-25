@@ -5,9 +5,8 @@ using UnityEngine;
 public class PlayerControllerX : MonoBehaviour
 {
     public bool gameOver;
-    private bool permitKeyPress = true;
-    private float pressDelay = 0.2f; //If at upper boundary don't allow input for a time
-    private float nextPress = -1f;
+    private bool isLowEnough = false; 
+ 
 
     public float floatForce;
     private float gravityModifier = 1.5f;
@@ -44,18 +43,16 @@ public class PlayerControllerX : MonoBehaviour
         if (transform.position.y >= upperYBoundary)
         {
             Debug.Log("No input allowed");
-            permitKeyPress = false;
-            nextPress = Time.time + pressDelay;
+            isLowEnough = false;
             transform.position = new Vector3(transform.position.x, upperYBoundary, transform.position.z);
         }
-        
-        if(permitKeyPress == false && Time.time > nextPress)
+        else
         {
-            permitKeyPress = true;
+            isLowEnough = true;
         }
 
         // While space is pressed and player is low enough, float up
-        if (Input.GetKey(KeyCode.Space) && !gameOver && permitKeyPress == true)
+        if (Input.GetKey(KeyCode.Space) && !gameOver && isLowEnough == true)
         {
 
             Debug.Log(" Space Down and moving " + Vector3.up * floatForce);
@@ -89,8 +86,8 @@ public class PlayerControllerX : MonoBehaviour
         else if (other.gameObject.CompareTag("Ground") && !gameOver)
         {
             Debug.Log("Bounce");               
-            playerAudio.PlayOneShot(bounceSound, 1.0f);
-            playerRb.AddForce(Vector3.up * 10, ForceMode.Impulse);
+            playerAudio.PlayOneShot(bounceSound, 1.5f);
+            playerRb.AddForce(Vector3.up * 20, ForceMode.Impulse);
 
         }
 
